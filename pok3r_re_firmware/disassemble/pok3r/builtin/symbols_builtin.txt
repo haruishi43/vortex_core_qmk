@@ -1,0 +1,163 @@
+POK3R Builtin Firmware Symbol Map:
+
+Functions:
+
+<function_name>                     @ 0x<offset>
+    <called function>
+    *<function referenced by pointer>
+
+entry                               @ 0x20
+    sram_init
+    main
+load_jump_fw                        @ 0x48
+sram_init                           @ 0x50
+
+bftm0_intr                          @ 0x9c
+bftm1_intr                          @ 0xc8
+
+usb_disable_dppu                    @ 0xdc
+    usb_dp_pull_up
+
+reset                               @ 0x118
+    watchdog_init
+    clock_init
+    entry
+
+generic_fault                       @ 0x124
+
+setup_afio_gpio                     @ 0x25c
+    ckcu_ahb_clock_enable
+
+clear_two_words                     @ 0x322
+clear_two_words_and_write_two_bytes @ 0x32a
+
+function_e_2                        @ 0x336
+function_14                         @ 0x35e
+
+ckcu_ahb_clock_enable               @ 0x3a0
+
+crc16                         @ 0x3fc
+
+flash_page_erase                    @ 0x440
+flash_get_protection_status         @ 0x454
+flash_write                         @ 0x460
+
+gpio_set_input_enable               @ 0x4a8
+gpio_set_pin_pull_up_down           @ 0x4c8
+
+i2c1_intr                           @ 0x4f0
+
+handle_update_packet                @ 0x650
+
+function_b_3                        @ 0x6dc
+
+reset_cmd                           @ 0x740
+    ckcu_ahb_clock_enable
+    usb_disable_dppu
+check_fw_sp_pc                      @ 0x7c0
+check_ver_str                       @ 0x7c0
+
+function_b_1                        @ 0x8fc
+
+function_b_2                        @ 0xa30
+
+ckcu_set_wtf                        @ 0xbb0
+
+function_e_4                        @ 0x102c
+
+function_17                         @ 0x104c
+
+clock_init                          @ 0x10e4
+
+function_70                         @ 0x120c
+    handle_update_packet
+
+ptr_write_func_ptrs                 @ 0x12ac
+function_67                         @ 0x1330
+function_81                         @ 0x1424
+usb_get_descriptor                  @ 0x1434
+
+function_6                          @ 0x1498
+
+usb_entry                           @ 0x14a2
+
+usb_init                            @ 0x16ec
+
+usb_dp_pull_up                      @ 0x1760
+
+usb_get_ep_buff                     @ 0x17b0
+    usb_get_ep_reg
+usb_get_ep_len                      @ 0x17ec
+    usb_get_ep_reg
+usb_get_ep_tcnt                     @ 0x1822
+    usb_get_ep_reg
+usb_copy_send                       @ 0x18f4
+    usb_get_ep_len
+    usb_get_ep_reg
+    usb_get_ep_tcnt
+    usb_get_ep_buff
+    word_copy
+
+usb_clear_csr                       @ 0x1990
+
+usb_intr                            @ 0x1a8c
+    usb_entry
+
+watchdog_reload_timer               @ 0x1af4
+
+flash_crc_cmd                       @ 0x1b04
+    crc16
+    function_14
+flash_erase_cmd                     @ 0x1b24
+    flash_page_erase
+    watchdog_reload_timer
+disconnect_cmd                      @ 0x1b74
+    usb_disable_dppu
+flash_read_write_cmd                @ 0x1b7c
+    firmware_decrypt
+    flash_get_protection_status
+    flash_write
+function_e_77                       @ 0x1ca0
+    usb_copy_send
+
+usb_get_ep_reg                      @ 0x1eb0
+
+main                                @ 0x1ee0
+    check_fw_sp_pc
+    check_ver_str
+    ckcu_set_wtf
+    load_jump_fw
+    setup_afio_gpio
+
+firmware_decrypt                    @ 0x1f90
+
+
+Data:
+
+usb_report0_desc                    @ 0x2024
+usb_report1_desc                    @ 0x2064
+usb_report2_desc                    @ 0x2088
+usb_device_desc                     @ 0x20f0
+usb_config_desc                     @ 0x2104
+usb_interface0_desc                 @ 0x210d
+usb_hid0_desc                       @ 0x2116
+usb_endpoint1_desc                  @ 0x211f
+usb_interface1_desc                 @ 0x2126
+usb_hid1_desc                       @ 0x212f
+usb_endpoint3_desc                  @ 0x2138
+usb_endpoint4_desc                  @ 0x213f
+usb_interface2_desc                 @ 0x2146
+usb hid2_desc                       @ 0x214f
+usb_endpoint2_desc                  @ 0x2158
+usb_str0_desc                       @ 0x2160
+usb_str1_desc                       @ 0x2164
+
+xor_key                             @ 0x2188
+
+update_handlers                     @ 0x21bc
+
+data_9                              @ 0x2264
+
+task_1                              @ 0x22ac
+task_2                              @ 0x22bc
+sram_init_data                      @ 0x22cc

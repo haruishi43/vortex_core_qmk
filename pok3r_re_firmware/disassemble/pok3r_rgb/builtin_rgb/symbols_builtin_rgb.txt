@@ -1,0 +1,81 @@
+POK3R RGB Builtin Firmware Symbol Map:
+
+Functions:
+
+<function_name>                     @ 0x<offset>
+    <called function>
+    *<function referenced by pointer>
+
+entry                               @ 0x1c
+    sram_init
+    main
+
+load_jump_fw                        @ 0x30
+
+memcpy                              @ 0x40
+mem_set                             @ 0x64
+mem_zero                            @ 0x72
+    mem_set
+mem_set2                            @ 0x76
+    mem_set
+
+sram_init                           @ 0x88
+
+bftm_set_counter                    @ 0xd8
+bftm_clear                          @ 0xf4
+
+reset                               @ 0x118
+    watchdog_init
+    clock_init
+    entry
+
+generic_fault                       @ 0x124
+
+bftm_set_mien                       @ 0x1d8
+
+ckcu_clocks_enable                  @ 0x2cc
+ckcu_set_usb_prescaler              @ 0x2f0
+
+flash_page_erase                    @ 0x304
+    flash_commit
+flash_commit                        @ 0x314
+
+nvic_disable_intr                   @ 0x668
+
+decrypt_packet                      @ 0x7b0
+    generate
+flash_write_buffer                  @ 0x7ec
+handle_frame                        @ 0x810
+    reset_builtin
+    decrypt_packet
+    flash_write_buffer
+
+reset_builtin                       @ 0x9e8
+flash_read_packet                   @ 0xa6c
+
+get_event                           @ 0x1560
+
+generate                            @ 0x1628
+firmware_check                      @ 0x1668
+    generate
+
+check_fw_sp_pc                      @ 0x1e48
+    load_jump_fw
+
+main                                @ 0x1ea4
+    check_fw_sp_pc
+    get_event
+    handle_frame
+
+
+Data:
+
+gpio_map_3                          @ 0x1fd4
+gpio_map_2                          @ 0x2024
+gpio_map_1                          @ 0x2074
+
+usb_report1_desc                    @ 0x20bc
+usb_report2_desc                    @ 0x20ec
+usb_report0_desc                    @ 0x2148
+
+usb_descriptors                     @ 0x2188

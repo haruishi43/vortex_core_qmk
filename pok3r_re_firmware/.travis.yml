@@ -1,0 +1,44 @@
+language: cpp
+
+branches:
+  only:
+  - master
+
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: false
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - sourceline: 'ppa:adrozdoff/cmake'
+        packages:
+        - cmake
+        - gcc-5
+        - g++-5
+        - libssl-dev
+        - libusb-dev
+    before_install:
+    - export CC=gcc-5 CXX=g++-5
+    - apt-cache policy cmake
+    - cmake --version
+
+  - os: osx
+    compiler: clang
+    env:
+    - CMAKE_INCLUDE_PATH=/usr/local/opt/openssl/include
+    - CMAKE_LIBRARY_PATH=/usr/local/opt/openssl/lib
+
+install:
+- mkdir -p $TRAVIS_BUILD_DIR/build
+- cd $TRAVIS_BUILD_DIR/build
+- cmake -D DEBUG=1 -D DISABLE_ZPNG=1 -D DISABLE_ZJPEG=1 -D DISABLE_ZWEBP=1 -D DISABLE_ZDATABASE=1 $TRAVIS_BUILD_DIR
+- make pok3rtool
+
+script:
+- cd $TRAVIS_BUILD_DIR/build/pok3rtool
+- ./pok3rtool list
+- ../../pok3rtool/test.sh ../..

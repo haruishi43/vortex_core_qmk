@@ -1,0 +1,72 @@
+language: cpp
+
+branches:
+  only:
+  - master
+  - staging
+
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: false
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - sourceline: 'ppa:adrozdoff/cmake'
+        packages:
+        - cmake
+        - gcc-5
+        - g++-5
+        - libssl-dev
+        - libsqlite3-dev
+        - libpng-dev
+        - libjpeg-dev
+        - libwebp-dev
+    env:
+    - TEST_SHARED=0 TEST_SHARED=1
+    before_install:
+    - export CC=gcc-5 CXX=g++-5
+    - apt-cache policy cmake
+    - cmake --version
+
+  - os: linux
+    dist: trusty
+    sudo: false
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - sourceline: 'ppa:adrozdoff/cmake'
+        packages:
+        - cmake
+        - libssl-dev
+        - libsqlite3-dev
+        - libpng-dev
+        - libjpeg-dev
+        - libwebp-dev
+    env:
+    - TEST_SHARED=0 TEST_SHARED=1
+    before_install:
+    - apt-cache policy cmake
+    - cmake --version
+
+  - os: osx
+    compiler: clang
+    env:
+    - CMAKE_INCLUDE_PATH=/usr/local/opt/openssl/include
+    - CMAKE_LIBRARY_PATH=/usr/local/opt/openssl/lib
+    - TEST_SHARED=0 TEST_SHARED=1
+
+install:
+- mkdir -p $TRAVIS_BUILD_DIR/build
+- cd $TRAVIS_BUILD_DIR/build
+- cmake -D LIBCHAOS_SHARED=$TEST_SHARED $TRAVIS_BUILD_DIR
+- make chaos-static chaos-shared testchaos
+
+script:
+- cd $TRAVIS_BUILD_DIR/build/tests
+- ./testchaos

@@ -1,0 +1,78 @@
+# MD200 Bootloader
+
+[data]
+
+0 : vectors .word
+
+[code]
+
+*   +4 : reset
+*   +4 : nmi
+*   +4 : hard_fault
+*   +4 : mcu_fault
+*   +4 : bus_fault
+*   +4 : usage_fault
+
+*   3c : systick_intr
+*   e4 : bftm0_intr
+*   e8 : bftm1_intr
+*   ec
+*   f0
+*  114 : usb_intr
+
+124 : generic_fault
+126 : generic_intr
+
+1c : entry
+24 : start
+* 28 : main
+30 : load_jump_fw
+40: memcpy
+64: mem_set
+72: mem_zero
+76: mem_set2
+88 : sram_init
+
+#* e4
+#* e8
+#* ec
+#* f0
+
+7e8 : handle_frame
+1620 : watchdog_reload_timer
+
+1a98 : orphan_1a98
+
+* 21c4
+* 21cc
+* 21d8
+* 21dc
+
+# these two pointers do not have the low bit set, they are reassembled incorrectly
+#* 21ec
+#* 21fc
+
+[data]
+
+# Force data on some "code" that isn't code
+*a4!
+*a8!
+
+0400: read_400_data
+
+* 1c0
+* 510
+* c38
+* c7c
+* dd4
+* eb0
+* 11a0
+* 1240
+* 166c
+* 17f0
+* 1bb0
+* 1d0c
+
+1fb4 : gpio_map_1 .word 16
+2004 : gpio_map_2 .word 8
+2024 : gpio_map_3 .word 16

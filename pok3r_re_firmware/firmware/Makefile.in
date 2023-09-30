@@ -1,0 +1,133 @@
+# Makefile for Cortex-M3
+
+# STOP EDITING THIS FILE RIGHT NOW
+# SERIOUSLY
+# PLEASE
+
+# This file should be configured with CMake.
+# The following variables should be set:
+# OUT_NAME SOURCE_DIR BINARY_DIR LD_FILE C_DEFS C_SRCS
+
+# App name
+APP_NAME = @OUT_NAME@
+
+# Directories
+SRC_DIR = @SOURCE_DIR@
+BIN_DIR = @BINARY_DIR@
+
+# Input Files
+LD_SCRIPT = $(SRC_DIR)/@LD_FILE@
+
+ALL_SRCS = @C_SRCS@
+
+# Output Files
+OUT_ELF = $(APP_NAME).elf
+OUT_BIN = $(APP_NAME).bin
+OUT_MAP = $(APP_NAME).map
+
+# Intermediary files
+CC_SRCS = $(filter %.c, $(ALL_SRCS))
+CC_DEPS = $(patsubst %.c, %.d, $(CC_SRCS))
+CPP_SRCS = $(filter %.cpp, $(ALL_SRCS))
+CPP_DEPS = $(patsubst %.cpp, %.d, $(CC_SRCS))
+
+ALL_DEPS += $(CC_DEPS)
+ALL_DEPS += $(CPP_DEPS)
+
+AS_SRCS += $(filter %.s %.S, $(ALL_SRCS))
+
+CC_OBJS = $(addprefix $(BIN_DIR)/, $(patsubst %.c, %.cc.o, $(CC_SRCS)))
+CPP_OBJS = $(addprefix $(BIN_DIR)/, $(patsubst %.cpp, %.cpp.o, $(CPP_SRCS)))
+AS_OBJS += $(addprefix $(BIN_DIR)/, $(patsubst %.s, %.as.o, $(filter %.s, $(AS_SRCS))))
+AS_OBJS += $(addprefix $(BIN_DIR)/, $(patsubst %.S, %.gas.o, $(filter %.S, $(AS_SRCS))))
+
+ALL_OBJS += $(CC_OBJS)
+ALL_OBJS += $(CPP_OBJS)
+ALL_OBJS += $(AS_OBJS)
+
+# Config
+ARM_CPU = cortex-m3
+
+# Commands
+CC = arm-none-eabi-gcc
+CPP = arm-none-eabi-g++
+AS = arm-none-eabi-as
+LD = arm-none-eabi-ld
+OC = arm-none-eabi-objcopy
+
+ifeq ($(OS),Windows_NT)
+	RM = DEL
+	MKDIR = $(SRC_DIR)/win_mkdir.bat
+else
+	RM = rm -f
+	MKDIR = mkdir -p
+endif
+
+# Options
+
+C_OPTS += -Wall -g -Os
+C_OPTS += -mcpu=$(ARM_CPU) -mthumb -nostdlib -nostartfiles
+C_OPTS += -ffreestanding -fstrict-volatile-bitfields
+C_OPTS += -MMD -MP -MF $(BIN_DIR)/$*.d
+C_OPTS += -DFW_BUILDING @C_DEFS@
+
+CC_FLAGS += -std=c11 $(C_OPTS)
+CPP_FLAGS += -std=c++11 $(C_OPTS)
+
+AS_FLAGS += -mcpu=$(ARM_CPU) -mthumb -g 
+
+LD_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -T $(LD_SCRIPT) -Map $(OUT_MAP)
+
+# Targets
+
+all: $(OUT_BIN)
+
+$(BIN_DIR)/%.as.o: $(SRC_DIR)/%.s
+	$(info AS   $(patsubst $(SRC_DIR)/%,%,$<))
+#	# Assemble only
+	$(AS) $(AS_FLAGS) -o $@ $<
+
+$(BIN_DIR)/%.gas.o: $(SRC_DIR)/%.S
+	$(info GAS  $(patsubst $(SRC_DIR)/%,%,$<))
+#	# Preprocess and assemble only
+	$(CC) -c $(AS_FLAGS) -o $@ $<
+
+$(BIN_DIR)/%.cc.o: $(SRC_DIR)/%.c
+	$(info CC   $(patsubst $(SRC_DIR)/%,%,$<))
+#	# Create directories if needed
+	$(MKDIR) $(BIN_DIR)/$(patsubst $(SRC_DIR)/%,%,$(dir $<))
+#	# Compile only
+	$(CC) -c $(CC_FLAGS) -o $@ $<
+
+$(BIN_DIR)/%.cpp.o: $(SRC_DIR)/%.cpp
+	$(info CPP  $(patsubst $(SRC_DIR)/%,%,$<))
+#	# Create directories if needed
+	$(MKDIR) $(BIN_DIR)/$(patsubst $(SRC_DIR)/%,%,$(dir $<))
+#	# Compile only
+	$(CPP) -c $(CPP_FLAGS) -o $@ $<
+
+$(OUT_ELF): $(LD_SCRIPT) $(ALL_OBJS)
+	$(info LINK $(notdir $@))
+#	# Link objects
+	$(LD) $(LD_FLAGS) -o $@ $(ALL_OBJS)
+#	# Display output size
+	@size -B $@
+
+$(OUT_BIN): $(OUT_ELF)
+	$(info BIN  $(notdir $@))
+#	# Produce firmware file
+	$(OC) $(OUT_ELF) -O binary $(OUT_BIN)
+
+clean:
+	$(RM) $(ALL_OBJS)
+	$(RM) $(ALL_DEPS)
+	$(RM) $(OUT_ELF)
+	$(RM) $(OUT_MAP)
+	$(RM) $(OUT_BIN)
+
+print-%:
+	@echo $* = $($*)
+
+-include $(ALL_DEPS)
+
+.PHONY: all clean

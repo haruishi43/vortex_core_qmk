@@ -1,0 +1,7 @@
+*.user
+*.user.*
+
+*.swp
+
+gen_keymaps.h
+

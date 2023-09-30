@@ -1,0 +1,95 @@
+
+[data]
+
+3400 : vectors .word
+
+[code]
+
+*   +4 : reset
+*   +4 : nmi
+*   +4 : hard_fault
+*   +4 : mcu_fault
+*   +4 : bus_fault
+*   +4 : usage_fault
+*  +14 : svccall_intr
+*   +4 : debug_intr
+*   +8 : pendsv_intr
+*   +4 : systick_intr
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +8
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*  +14 : bftm0_intr
+*   +4 : bftm1_intr
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4 : usb_intr
+*   +8
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*   +4
+*  +18
+
+356e : generic_intr
+
+35a0
+35e6
+3bf6
+7870
+7872
+787e
+7882
+
+5fc8 : handle_frame
+6118 : flash_read_packet
+
+[data]
+
+# Force data on some "code" that isn't code
+3630!
+3634!
+
