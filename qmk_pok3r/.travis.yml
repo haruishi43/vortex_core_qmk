@@ -1,0 +1,28 @@
+os: linux
+dist: trusty
+sudo: required
+group: edge
+language: c
+branches:
+  except:
+    - /^.*-automated-build$/
+    - /^[0-9]+\.[0-9]+\.[0-9]+/
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - sourceline: 'ppa:terry.guo/gcc-arm-embedded'
+    packages:
+      - gcc-arm-none-eabi
+      - binutils-arm-none-eabi
+      - libnewlib-arm-none-eabi
+
+script:
+  - make vortex/pok3r:default
+  - make vortex/pok3r:chaos
+  - make vortex/pok3r_rgb:default
+  - make vortex/pok3r_rgb:chaos
+  - make vortex/core:default
+  - make vortex/core:chaos
+
